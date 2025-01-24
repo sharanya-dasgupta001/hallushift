@@ -1,7 +1,6 @@
 # HalluShift
 
-This repository contains the source code for [**HalluShift: Measuring Distribution Shifts towards Hallucination Detection**] by Xuefeng Du, Chaowei Xiao, and Yixuan Li.
-
+This repository contains the source code for [**HalluShift: Measuring Distribution Shifts towards Hallucination Detection**] by some random people.
 ---
 
 ## **Model Preparation**
