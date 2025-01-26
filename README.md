@@ -51,8 +51,3 @@ This repository contains the source code for [**HalluShift: Measuring Distributi
 
 ---
 
-
-## **Citation**
-
-```plaintext
-(Include citation details for your paper here)
