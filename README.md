@@ -1,11 +1,13 @@
 # HalluShift
 
-This repository contains the source code for [**HalluShift: Measuring Distribution Shifts towards Hallucination Detection**] by some random people.
+This repository contains the source code for [**HalluShift: Measuring Distribution Shifts towards Hallucination Detection**].
+
 ---
 
 ## **Model Preparation**
 
-1. **Download Models**  
+1. **Setup environment and Download Models**  
+   - Install `Python 3.10.12` and the necessary packages from `requirment.txt`.
    - Get the [LLaMA-2 7B](https://huggingface.co/meta-llama) and [OPT 6.7B](https://huggingface.co/facebook/opt-6.7b) models.
    
 2. **Setup Directory**  
@@ -21,8 +23,7 @@ This repository contains the source code for [**HalluShift: Measuring Distributi
 
 1. **Setup Results Directory**  
    Create a folder to save:
-   - LLM-generated answers
-   - Ground truth labels for model-generated content
+   - LLM-generated answers and Ground truth labels for model-generated content
    - Features for training classifiers
    ```bash
    mkdir results
@@ -42,6 +43,10 @@ This repository contains the source code for [**HalluShift: Measuring Distributi
    - `dataset_name`: Choose from `truthfulqa`, `triviaqa`, `tydiqa`, `coqa`, `haluevalqa`, `haluevaldia`, `haluevalsum`.
    - `model_name`: Choose from `llama2_7B`, `llama3_8B`, or `opt6.7B`.
 
+   **Note:** If you encounter memory errors, consider reducing the number of workers using the `--num_workers` parameter. For example:
+   ```bash
+   python hal_detection.py --dataset_name truthfulqa --model_name llama2_7B --num_workers 1
+   ```
    Refer to Section IV of the paper for implementation details.
 
 ---
