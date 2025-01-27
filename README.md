@@ -50,7 +50,7 @@ This repository contains the source code for [**HalluShift: Measuring Distributi
    Refer to Section IV of the paper for implementation details.
 
 ---
-5. **Demo**
+* **Demo**
    To quickly evaluate the pre-trained model on the TruthfulQA dataset (which has already been processed and inferred using the LLaMA-2 7B model), run the following command:
    ```bash
    python demo/demo.py
