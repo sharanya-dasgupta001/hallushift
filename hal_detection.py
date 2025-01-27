@@ -208,7 +208,7 @@ def main():
         'triviaqa': "Answer the question concisely. Q: {question} A:",
         'tydiqa': "Answer the question concisely based on the context: \n {context} \n Q: {question} A:",
         'coqa': "Answer the question concisely based on the context: \n {story} \n Q: {question} A:",
-        'haluevaldia': "You are an assistant that answers questions concisely and accurately. Use the knowledge and conversation to respond naturally to the most recent message.\nKnowledge: {knowledge}.\nConversations: {dialogue_history}.\nYour Response:",
+        'haluevaldia': "You are an assistant that answers questions concisely and accurately. Use the knowledge and conversation to respond naturally to the most recent message.\nKnowledge: {knowledge}.\nConversations: {dialogue_history} [Assistant]:",
         'haluevalqa': "Answer the question concisely based on the context: \n {context} \n Q: {question} A:",
         'haluevalsum': "{document} \n Please summarize the above article concisely. A:"
     }
