@@ -15,8 +15,13 @@ This repository contains the source code for [**HalluShift: Measuring Distributi
      conda activate hallushift
      pip install -r requirements.txt
      ```
-2. **Download Models**
-   - Get the [LLaMA-2 7B](https://huggingface.co/meta-llama) and [OPT 6.7B](https://huggingface.co/facebook/opt-6.7b) models.
+2. **Setup Language Models**
+   - You can choose between [
+Llama-2-7b-hf](https://huggingface.co/meta-llama/Llama-2-7b-hf)(default) and [
+opt-6.7b](https://huggingface.co/facebook/opt-6.7b).
+   - Login to `huggingface` or create an account if you don't have already.
+   - From the [settings](https://huggingface.co/settings/tokens) create a new access token with WRITE access.
+   - Open the `hal_detection.py` and paste your access token at `line 15, hf_token = "<INPUT_YOUR_HF_ACCESS_TOKEN>"`
 3. **Setup Directory**  
    Create a folder to store the downloaded models:
    ```bash
