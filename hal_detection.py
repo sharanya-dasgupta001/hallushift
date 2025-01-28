@@ -197,7 +197,7 @@ def main():
         torch_dtype=torch.bfloat16,
         low_cpu_mem_usage=True,
         device_map="auto",
-        cache_dir="/home/iplab/LLM/models/",
+        cache_dir="./models",
         attn_implementation="eager").to("cuda")
     print("\nLLM successfully initialized.\n")
 
@@ -208,7 +208,7 @@ def main():
         'triviaqa': "Answer the question concisely. Q: {question} A:",
         'tydiqa': "Answer the question concisely based on the context: \n {context} \n Q: {question} A:",
         'coqa': "Answer the question concisely based on the context: \n {story} \n Q: {question} A:",
-        'haluevaldia': "You are an assistant that answers questions concisely and accurately. Use the knowledge and conversation to respond naturally to the most recent message.\nKnowledge: {knowledge}.\nConversations: {dialogue_history} [Assistant]:",
+        'haluevaldia': "You are an assistant that answers questions concisely and accurately. Use the knowledge and conversation to respond naturally to the most recent message.\nKnowledge: {knowledge}.\nConversations: {dialogue_history}.\nYour Response:",
         'haluevalqa': "Answer the question concisely based on the context: \n {context} \n Q: {question} A:",
         'haluevalsum': "{document} \n Please summarize the above article concisely. A:"
     }
@@ -221,13 +221,13 @@ def main():
         elif args.dataset_name == 'tydiqa':
             prompt = tokenizer(base_prompt.format(context=row['context'], question=row['question']), return_tensors='pt').to("cuda") 
         elif args.dataset_name == 'coqa':
-            prompt = tokenizer(base_prompt.format(story=functions.truncate_after_words(row['story']), question=row['question']), return_tensors='pt').to("cuda") 
+            prompt = tokenizer(base_prompt.format(story=row['story'], question=row['question']), return_tensors='pt').to("cuda") 
         elif args.dataset_name == 'haluevaldia':
             prompt = tokenizer(base_prompt.format(knowledge=row['knowledge'], dialogue_history=row['dialogue_history']), return_tensors='pt').to("cuda") 
         elif args.dataset_name == 'haluevalqa':
             prompt = tokenizer(base_prompt.format(context=row['knowledge'], question=row['question']), return_tensors='pt').to("cuda") 
         elif args.dataset_name == 'haluevalsum':
-            prompt = tokenizer(base_prompt.format(document=functions.truncate_after_words(row['document'])),padding=True, return_tensors='pt').to("cuda") 
+            prompt = tokenizer(base_prompt.format(document=row['document']),padding=True, return_tensors='pt').to("cuda") 
 
         generated = model.generate(**prompt,
                                     do_sample=False,
@@ -255,13 +255,13 @@ def main():
             elif args.dataset_name == 'tydiqa':
                 prompt = tokenizer(base_prompt.format(context=row['context'], question=row['question']), return_tensors='pt').to("cuda") 
             elif args.dataset_name == 'coqa':
-                prompt = tokenizer(base_prompt.format(story=functions.truncate_after_words(row['story']), question=row['question']), return_tensors='pt').to("cuda") 
+                prompt = tokenizer(base_prompt.format(story=row['story'], question=row['question']), return_tensors='pt').to("cuda") 
             elif args.dataset_name == 'haluevaldia':
                 prompt = tokenizer(base_prompt.format(knowledge=row['knowledge'], dialogue_history=row['dialogue_history']), return_tensors='pt').to("cuda") 
             elif args.dataset_name == 'haluevalqa':
                 prompt = tokenizer(base_prompt.format(context=row['knowledge'], question=row['question']), return_tensors='pt').to("cuda") 
             elif args.dataset_name == 'haluevalsum':
-                prompt = tokenizer(base_prompt.format(document=functions.truncate_after_words(row['document'])), return_tensors='pt').to("cuda") 
+                prompt = tokenizer(base_prompt.format(document=row['document']), return_tensors='pt').to("cuda") 
 
             generated = model.generate(**prompt,
                                         do_sample=False,
@@ -296,7 +296,7 @@ def main():
     print("Starting the BLEURT setup for evaluation...\n")
     # correct answers for questions 
     answer_mapping = {
-        'truthfulqa': ['best_answer', 'correct_answers','question'],
+        'truthfulqa': ['best_answer','question'],
         'triviaqa': ['answer','question'],
         'coqa': ['answer','question'],
         'tydiqa': ['answers','question'],
