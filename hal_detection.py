@@ -193,14 +193,9 @@ def main():
     print("Dataset successfully downloaded.\n")
 
     print("Initializing  LLM...\n")
-    os.makedirs("./models", exist_ok=True)
-    if MODEL == "llama2-7b":
-        model_id = "meta-llama/Llama-2-7b-hf"
-    if MODEL == "opt-6.7b":
-        model_id = "facebook/opt-6.7b"
-    tokenizer = AutoTokenizer.from_pretrained(model_id, use_auth_token=hf_token)
+    tokenizer = AutoTokenizer.from_pretrained(MODEL, use_auth_token=hf_token)
     model = AutoModelForCausalLM.from_pretrained(
-        model_id,
+        MODEL,
         use_auth_token=hf_token,
         torch_dtype=torch.bfloat16,
         low_cpu_mem_usage=True,
