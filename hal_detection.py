@@ -11,6 +11,9 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 import warnings
 from concurrent.futures import ThreadPoolExecutor
 
+# Add your Hugging Face Access Token here
+hf_token = "<INPUT_YOUR_HF_ACCESS_TOKEN>"
+
 # Suppress warnings
 warnings.filterwarnings("ignore")
 
@@ -145,7 +148,7 @@ def main():
     - Train classifier.
     """
     parser = argparse.ArgumentParser()
-    parser.add_argument('--model_name', type=str, default='llama2_7B', help='Name of the model to use.')
+    parser.add_argument('--model_name', type=str, default='llama2-7b', help='Name of the model to use.')
     parser.add_argument('--dataset_name', type=str, default='truthfulqa', help='Name of the dataset to use.')
     parser.add_argument('--num_workers', type=int, default=4, help='Number of cpu threads to use.')
     args = parser.parse_args()
@@ -191,9 +194,14 @@ def main():
 
     print("Initializing  LLM...\n")
     os.makedirs("./models", exist_ok=True)
-    tokenizer = AutoTokenizer.from_pretrained(MODEL)
+    if MODEL == "llama2-7b":
+        model_id = "meta-llama/Llama-2-7b-hf"
+    if MODEL == "opt-6.7b":
+        model_id = "facebook/opt-6.7b"
+    tokenizer = AutoTokenizer.from_pretrained(model_id, use_auth_token=hf_token)
     model = AutoModelForCausalLM.from_pretrained(
-        MODEL,
+        model_id,
+        use_auth_token=hf_token,
         torch_dtype=torch.bfloat16,
         low_cpu_mem_usage=True,
         device_map="auto",
