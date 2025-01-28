@@ -6,11 +6,18 @@ This repository contains the source code for [**HalluShift: Measuring Distributi
 
 ## **Model Preparation**
 
-1. **Setup environment and Download Models**  
-   - Install `Python 3.10.12` and the necessary packages from `requirment.txt`.
+1. **Setup environment**  
+   - Install `Python 3.10.12` and the necessary packages from `requirements.txt`.
+   - For easily managing different python versions, we recommend using [conda](https://docs.anaconda.com/miniconda/install/).
+   - Create a new environment in conda and install necessary python packages:
+     ```bash
+     conda create -n hallushift python=3.10.12 -y
+     conda activate hallushift
+     pip install -r requirements.txt
+     ```
+2. **Download Models**
    - Get the [LLaMA-2 7B](https://huggingface.co/meta-llama) and [OPT 6.7B](https://huggingface.co/facebook/opt-6.7b) models.
-   
-2. **Setup Directory**  
+3. **Setup Directory**  
    Create a folder to store the downloaded models:
    ```bash
    mkdir models
