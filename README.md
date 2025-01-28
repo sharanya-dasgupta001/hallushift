@@ -45,6 +45,7 @@ This repository contains the source code for **HalluShift: Measuring Distributio
    ```
    - `dataset_name`: Choose from `truthfulqa`, `triviaqa`, `tydiqa`, `coqa`, `haluevalqa`, `haluevaldia`, `haluevalsum`.
    - `model_name`: Choose from [`llama2_7B`](https://huggingface.co/meta-llama/Llama-2-7b-hf), [`llama3_8B`](https://huggingface.co/meta-llama/Llama-3.1-8B), or [`opt6.7B`](https://huggingface.co/facebook/opt-6.7b).
+   
    **Note:** If you encounter memory errors, consider reducing the number of workers using the `--num_workers` parameter. For example:
    ```bash
    python hal_detection.py --dataset_name truthfulqa --model_name llama2_7B --num_workers 1
