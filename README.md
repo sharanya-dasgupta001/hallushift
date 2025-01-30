@@ -24,21 +24,29 @@ This repository contains the source code for **HalluShift: Measuring Distributio
 
 ## **Generating Responses and Hallucination Detection**
 
-1. **Setup Results Directory**  
+1. **Setup Necessary Directories**  
    Create a folder to save:
    - LLM-generated answers and Ground truth labels for model-generated content
    - Features for training classifiers
    ```bash
    mkdir results
    ```
+   Create another folder, where you need to place BleuRT models in the next step. And llm models will be automatically saved while running the script.
+   ```
+   mkdir models
+   ```
 
 2. **Ground Truth Evaluation**  
    Since generated answers lack explicit ground truth, we use [BleuRT](https://arxiv.org/abs/2004.04696) to evaluate truthfulness.
+   - We are using 12-layer distilled model for faster inference, which is ~3.5X smaller.
+   - Download the model and save it in the `./models` folder:
+   ```
+   wget https://storage.googleapis.com/bleurt-oss-21/BLEURT-20-D12.zip .
+   unzip BLEURT-20-D12.zip
+   ```
+   - If you want to use any different model please refer to [BleuRT repository](https://github.com/google-research/bleurt).
 
-3. **Download BleuRT Models**  
-   Refer to the [BleuRT repository](https://github.com/google-research/bleurt) and save the models in the `./models` folder.
-
-4. **Hallucination Detection for TruthfulQA**  
+3. **Hallucination Detection for TruthfulQA**  
    To perform hallucination detection on the **TruthfulQA** dataset run the following command:
    ```bash
    python hal_detection.py --dataset_name truthfulqa --model_name llama2_7B 
