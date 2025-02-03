@@ -61,7 +61,7 @@ class FeatureEmbeddingNN(nn.Module):
         return x
 
 class CombinedNN(nn.Module):
-    """Combines divergence features and probabilistic features for hallucination detection.
+    """Combines distribution shift features and probabilistic features for hallucination detection.
     This module takes Wasserstein distances and cosine similarities from hidden states and attention layers,
     embeds them using separate feature embedding networks in lower dimensional space,
     concatenates these embeddings with additional probabilistic features, and finally passes the combined features
