@@ -48,7 +48,7 @@ This repository contains the source code for **HalluShift: Measuring Distributio
    - We are using 12-layer distilled model for faster inference, which is ~3.5X smaller.
    - Download the model and save it in the `./models` folder:
    ```
-   wget https://storage.googleapis.com/bleurt-oss-21/BLEURT-20-D12.zip .
+   wget https://storage.googleapis.com/bleurt-oss-21/BLEURT-20-D12.zip
    unzip BLEURT-20-D12.zip
    ```
    - If you want to use any different model please refer to [BleuRT repository](https://github.com/google-research/bleurt).
