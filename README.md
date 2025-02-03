@@ -38,6 +38,13 @@ This repository contains the source code for **HalluShift: Measuring Distributio
 
 2. **Ground Truth Evaluation**  
    Since generated answers lack explicit ground truth, we use [BleuRT](https://arxiv.org/abs/2004.04696) to evaluate truthfulness.
+   - To install BleuRT run:
+   ```
+   pip install --upgrade pip  # ensures that pip is current
+   git clone https://github.com/google-research/bleurt.git
+   cd bleurt
+   pip install .
+   ```
    - We are using 12-layer distilled model for faster inference, which is ~3.5X smaller.
    - Download the model and save it in the `./models` folder:
    ```
@@ -46,7 +53,7 @@ This repository contains the source code for **HalluShift: Measuring Distributio
    ```
    - If you want to use any different model please refer to [BleuRT repository](https://github.com/google-research/bleurt).
 
-3. **Hallucination Detection for TruthfulQA**  
+4. **Hallucination Detection for TruthfulQA**  
    To perform hallucination detection on the **TruthfulQA** dataset run the following command:
    ```bash
    python hal_detection.py --dataset_name truthfulqa --model_name llama2_7B 
