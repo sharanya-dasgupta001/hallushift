@@ -139,7 +139,7 @@ def column_to_txt(dataset, column_name, txt_file):
 def bleurt_processing(file1, file2, threshold=0.5):
     """Processes BLEURT scores to detect hallucinations.
 
-    Reads BLEURT scores from a file, groups them by ID, and assigns a hallucination
+    Reads BLEURT scores from a file, groups them by ID and keep the maximum, then assigns a hallucination
     label based on a threshold.  If the maximum BLEURT score for an ID is above the
     threshold, it's considered not a hallucination (0), otherwise it is (1).
 
