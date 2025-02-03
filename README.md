@@ -50,6 +50,7 @@ This repository contains the source code for **HalluShift: Measuring Distributio
    ```
    wget https://storage.googleapis.com/bleurt-oss-21/BLEURT-20-D12.zip
    unzip BLEURT-20-D12.zip
+   mv BLEURT-20-D12 models/. # Move the bleurt model folder to models directory
    ```
    - If you want to use any different model please refer to [BleuRT repository](https://github.com/google-research/bleurt).
 
