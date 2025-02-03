@@ -6,7 +6,6 @@ aiosignal==1.3.2
 astunparse==1.6.3
 async-timeout==5.0.1
 attrs==24.3.0
-BLEURT==0.0.2
 cachetools==5.5.1
 certifi==2024.12.14
 charset-normalizer==3.4.0
