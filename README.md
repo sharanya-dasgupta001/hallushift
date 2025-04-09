@@ -1,12 +1,14 @@
-# HalluShift
+# 🌟 HalluShift
 
-This repository contains the source code for **HalluShift: Measuring Distribution Shifts towards Hallucination Detection**.
+This repository contains the source code for **HalluShift: Measuring Distribution Shifts towards Hallucination Detection in LLMs**.
+
+![](Hallushift_method_v2_page-0001.jpg)
 
 ---
 
-## **Model Preparation**
+## 🛠️ **Model Preparation**
 
-1. **Setup environment**  
+1. **📦 Setup Environment**  
    - Install `Python 3.10.12` and the necessary packages from `requirements.txt`.
    - For easily managing different python versions, we recommend using [conda](https://docs.anaconda.com/miniconda/install/).
    - Create a new environment in conda and install necessary python packages:
@@ -15,16 +17,16 @@ This repository contains the source code for **HalluShift: Measuring Distributio
      conda activate hallushift
      pip install -r requirements.txt
      ```
-2. **Create HF Access Token**
+2. **🔑 Create HF Access Token**
    - Login to `huggingface` or create an account if you don't have already.
    - From the [settings](https://huggingface.co/settings/tokens) create a new access token with WRITE access.
    - Open the `hal_detection.py` and paste your access token at `line 15, hf_token = "<INPUT_YOUR_HF_ACCESS_TOKEN>"`
 
 ---
 
-## **Generating Responses and Hallucination Detection**
+## **📊 Generating Responses and Hallucination Detection**
 
-1. **Setup Necessary Directories**  
+1. **📁 Setup Necessary Directoriess**  
    Create a folder to save:
    - LLM-generated answers and Ground truth labels for model-generated content
    - Features for training classifiers
@@ -36,7 +38,7 @@ This repository contains the source code for **HalluShift: Measuring Distributio
    mkdir models
    ```
 
-2. **Ground Truth Evaluation**  
+2. **✅ Ground Truth Evaluation**  
    Since generated answers lack explicit ground truth, we use [BleuRT](https://arxiv.org/abs/2004.04696) to evaluate truthfulness.
    - To install BleuRT run:
    ```
@@ -54,7 +56,7 @@ This repository contains the source code for **HalluShift: Measuring Distributio
    ```
    - If you want to use any different model please refer to [BleuRT repository](https://github.com/google-research/bleurt).
 
-4. **Hallucination Detection for TruthfulQA**  
+3. **🔍 Hallucination Detection for TruthfulQA**  
    To perform hallucination detection on the **TruthfulQA** dataset run the following command:
    ```bash
    python hal_detection.py --dataset_name truthfulqa --model_name llama2_7B 
@@ -69,7 +71,7 @@ This repository contains the source code for **HalluShift: Measuring Distributio
    Refer to Section IV of the paper for implementation details.
 
 ---
-* **Demo**
+* **🎮 Demo**
    To quickly evaluate the pre-trained model on the TruthfulQA dataset (which has already been processed and inferred using the LLaMA-2 7B model), run the following command:
    ```bash
    cd demo
