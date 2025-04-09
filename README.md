@@ -1,6 +1,6 @@
 # 🌟 HalluShift
 
-This repository contains the source code for **HalluShift: Measuring Distribution Shifts towards Hallucination Detection in LLMs**.
+This repository contains the source code for [***HalluShift: Measuring Distribution Shifts towards Hallucination Detection in LLMs***](https://arxiv.org/) by Sharanya Dasgupta, Sujoy Nath, Arkaprabha Basu, Pourya Shamsolmoali, and Swagatam Das.
 
 ![](Hallushift_method_v2_page-0001.jpg)
 
