@@ -61,36 +61,37 @@ class FeatureEmbeddingNN(nn.Module):
         return x
 
 class CombinedNN(nn.Module):
-    """Combines distribution shift features and probabilistic features for hallucination detection.
+    """Combines divergence features and probabilistic features for hallucination detection.
     This module takes Wasserstein distances and cosine similarities from hidden states and attention layers,
     embeds them using separate feature embedding networks in lower dimensional space,
     concatenates these embeddings with additional probabilistic features, and finally passes the combined features
     through a fully connected network to output hallucination score.
     """
 
-    def __init__(self):
+    def __init__(self, num_layers):
         super(CombinedNN, self).__init__()
-        self.wasserstein_hidden_embedding = FeatureEmbeddingNN(15, 8)
-        self.cosine_hidden_embedding = FeatureEmbeddingNN(15, 8)
-        self.wasserstein_attention_embedding = FeatureEmbeddingNN(15, 8)
-        self.cosine_attention_embedding = FeatureEmbeddingNN(15, 8)
+        self.num_layers = num_layers
+        self.wasserstein_hidden_embedding = FeatureEmbeddingNN((num_layers//2)-1, ((num_layers//2)-1)//2)
+        self.cosine_hidden_embedding = FeatureEmbeddingNN((num_layers//2)-1, ((num_layers//2)-1)//2)
+        self.wasserstein_attention_embedding = FeatureEmbeddingNN((num_layers//2)-1, ((num_layers//2)-1)//2)
+        self.cosine_attention_embedding = FeatureEmbeddingNN((num_layers//2)-1, ((num_layers//2)-1)//2)
 
         self.fc_final = nn.Sequential(
-            nn.LayerNorm(32+11), # 32 divergence and similarity features, 11 probabilistic features
+            nn.LayerNorm(4*(((num_layers//2)-1)//2)+11), # 32 divergence and similarity features, 11 probabilistic features
             nn.Dropout(0.2),
-            nn.Linear(32+11 , 16),
-            nn.LayerNorm(16),
+            nn.Linear(4*(((num_layers//2)-1)//2)+11 , 2*(((num_layers//2)-1)//2)),
+            nn.LayerNorm(2*(((num_layers//2)-1)//2)),
             nn.Dropout(0.2),
-            nn.Linear(16, 1)
+            nn.Linear(2*(((num_layers//2)-1)//2), 1)
         )
 
     def forward(self, x):
         # Extract features from dataset
-        wasserstein_hidden = x[:, 0:15]
-        cosine_hidden = x[:, 15:30]
-        wasserstein_attention = x[:, 30:45]
-        cosine_attention = x[:, 45:60]
-        probability_features = x[:, 60:] 
+        wasserstein_hidden = x[:, 0:((self.num_layers//2)-1)]
+        cosine_hidden = x[:, ((self.num_layers//2)-1):2*((self.num_layers//2)-1)]
+        wasserstein_attention = x[:, 2*((self.num_layers//2)-1):3*((self.num_layers//2)-1)]
+        cosine_attention = x[:, 3*((self.num_layers//2)-1):4*((self.num_layers//2)-1)]
+        probability_features = x[:, 4*((self.num_layers//2)-1):] 
 
         wasserstein_hidden_emb = self.wasserstein_hidden_embedding(wasserstein_hidden)
         cosine_hidden_emb = self.cosine_hidden_embedding(cosine_hidden)
@@ -100,7 +101,7 @@ class CombinedNN(nn.Module):
         combined_emb = torch.cat([wasserstein_hidden_emb, cosine_hidden_emb, wasserstein_attention_emb, cosine_attention_emb, probability_features], dim=1)
         return self.fc_final(combined_emb)
 
-def train_combined_model(df, test_size=0.25, batch_size=16, epochs=1000, learning_rate=0.0001):
+def train_combined_model(df, num_layers, test_size=0.25, batch_size=16, epochs=1000, learning_rate=0.0001):
     """Trains a combined neural network model for hallucination detection.
 
     Args:
@@ -147,10 +148,10 @@ def train_combined_model(df, test_size=0.25, batch_size=16, epochs=1000, learnin
 
 
     # Initialize model, criterion, optimizer, and scheduler
-    model = CombinedNN().cuda()
+    model = CombinedNN(num_layers).cuda()
     criterion = AccuracyImprovementLossBinary().cuda()
     optimizer = optim.AdamW(model.parameters(), lr=learning_rate, weight_decay=0.0001)
-    scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='max', factor=0.5, patience=5, verbose=True)
+    scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='max', factor=0.5, patience=5)
 
     # Initialize training parameters for early stopping
     best_val_auc = 0

@@ -45,7 +45,7 @@ def cosine_similarity(tensor1, tensor2):
     tensor2 = tensor2.view(-1, tensor2.size(-1)).to(torch.float32)
     return F.cosine_similarity(tensor1, tensor2).item()
 
-def plot_internal_state_2(outputs, state="hidden"):
+def plot_internal_state_2(outputs, num_layers, state="hidden"):
     """Analyze internal model states (hidden and attention) and calculate various metrics.
 
     This function processes hidden states or attentions from internal model layers during inference,
@@ -60,10 +60,10 @@ def plot_internal_state_2(outputs, state="hidden"):
         A list of average Wasserstein distances and cosine similarities.
     """
     results = []
-    index_sums = [0] * 30
+    index_sums = [0] * ((num_layers//2) - 1) * 2
     if state == "hidden":
         for tup in outputs.hidden_states:
-            vec = [normalize_as_distribution(tup[i]) for i in range(2,33,2)]
+            vec = [normalize_as_distribution(tup[i]) for i in range(2,num_layers+1,2)]
             div = [wasserstein_dist(vec[i], vec[i+1]) for i in range(len(vec)-1)]
             div.extend(cosine_similarity(vec[i], vec[i+1]) for i in range(len(vec)-1))
             results.append(div)
@@ -71,17 +71,16 @@ def plot_internal_state_2(outputs, state="hidden"):
 
     else:
         for tup in outputs.attentions:
-            vec = [normalize_as_distribution(tup[i]) for i in range(1,32,2)]
+            vec = [normalize_as_distribution(tup[i]) for i in range(1,num_layers,2)]
             div = [wasserstein_dist(vec[i], vec[i+1]) for i in range(len(vec)-1)]
             div.extend(cosine_similarity(vec[i], vec[i+1]) for i in range(len(vec)-1))
             results.append(div)
 
 
-    for res, i in itertools.product(results, range(30)):
+    for res, i in itertools.product(results, range(((num_layers//2) - 1) * 2)):
         index_sums[i] += res[i]
 
-    return [sum_val / len(results) for sum_val in index_sums]
-        
+    return [sum_val / len(results) for sum_val in index_sums]        
 
 def probability_function(output):
     """Calculate the maximum and minimum probabilities from model logits.
@@ -261,7 +260,7 @@ def percentile(prob_list, q):
     """
     return np.percentile(prob_list, q)
 
-def data_preparation(df_1, df_2):
+def data_preparation(df_1, df_2, num_layers):
     """Prepares data for hallucination detection classifier training.
     This function engineers features from divergence, similarity measures and probability distributions, merges them with hallucination labels,
     and prepares the dataset for training a hallucination detection model.
@@ -278,13 +277,13 @@ def data_preparation(df_1, df_2):
     """
 
     # Creating Probabilistic Features
-    temp_120 = df_1[60].copy()
-    temp_121 = df_1[61].copy()
+    temp_120 = df_1[(num_layers//2 - 1)*4].copy()
+    temp_121 = df_1[(num_layers//2 - 1)*4 + 1].copy()
 
     # Maximum spread (Mps)
-    df_1[61] = df_1.apply(
-        lambda row: max(a - b for a, b in zip(row[60], row[61])), axis=1 )
-    df_1[60] = df_1[60].apply(lambda x : min(x))
+    df_1[(num_layers//2 - 1)*4 +1] = df_1.apply(
+        lambda row: max(a - b for a, b in zip(row[(num_layers//2 - 1)*4], row[(num_layers//2 - 1)*4 + 1])), axis=1 )
+    df_1[(num_layers//2 - 1)*4] = df_1[(num_layers//2 - 1)*4].apply(lambda x : min(x))
 
     # Other features
     df_1['norm_entropy_max'] = temp_120.apply(normalized_entropy)

@@ -62,7 +62,9 @@ This repository contains the source code for [***HalluShift: Measuring Distribut
    python hal_detection.py --dataset_name truthfulqa --model_name llama2_7B 
    ```
    - `dataset_name`: Choose from `truthfulqa`, `triviaqa`, `tydiqa`, `coqa`, `haluevalqa`, `haluevaldia`, `haluevalsum`.
-   - `model_name`: Choose from [`llama2_7B`](https://huggingface.co/meta-llama/Llama-2-7b-hf), [`llama3_8B`](https://huggingface.co/meta-llama/Llama-3.1-8B), or [`opt6.7B`](https://huggingface.co/facebook/opt-6.7b).
+   - `model_name`: Choose from [`llama2_7B`](https://huggingface.co/meta-llama/Llama-2-7b-hf), [`llama3_8B`](https://huggingface.co/meta-llama/Llama-3.1-8B), [`opt6.7B`](https://huggingface.co/facebook/opt-6.7b), [`vicuna_7B`](https://huggingface.co/lmsys/vicuna-7b-v1.5) or [`Qwen2.5_7B`](https://huggingface.co/Qwen/Qwen2.5-7B).
+   - To use a different LLM, add its corresponding path to the `MODELS_NAMES` dictionary in `hal_detection.py`.
+   - To use a different dataset, update the `load_dataset_by_name` function in `hal_detection.py`. Ensure that it returns a `datasets.Dataset` object. 
    
    **Note:** If you encounter memory errors, consider reducing the number of workers using the `--num_workers` parameter. For example:
    ```bash

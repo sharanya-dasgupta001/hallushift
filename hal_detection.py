@@ -21,7 +21,9 @@ warnings.filterwarnings("ignore")
 MODELS_NAMES = {
     'llama2_7B': "meta-llama/Llama-2-7b-hf", 
     'llama3_8B': "meta-llama/Llama-3.1-8B",
-    'opt6.7B': "facebook/opt-6.7b"
+    'opt6.7B': "facebook/opt-6.7b",
+    'vicuna_7B' : "lmsys/vicuna-7b-v1.5",
+    'Qwen2.5_7B' : "Qwen/Qwen2.5-7B"
 }
 
 def seed_everything(seed: int):
@@ -148,8 +150,8 @@ def main():
     - Train classifier.
     """
     parser = argparse.ArgumentParser()
-    parser.add_argument('--model_name', type=str, default='llama2-7b', help='Name of the model to use.')
-    parser.add_argument('--dataset_name', type=str, default='truthfulqa', help='Name of the dataset to use.')
+    parser.add_argument('--model_name', type=str, default='llama2-7b', help='Name of the model to use.', options=MODELS_NAMES.keys())
+    parser.add_argument('--dataset_name', type=str, default='truthfulqa', help='Name of the dataset to use.', options=['truthfulqa', 'triviaqa', 'tydiqa', 'coqa', 'haluevaldia', 'haluevalqa', 'haluevalsum'])
     parser.add_argument('--num_workers', type=int, default=4, help='Number of cpu threads to use.')
     args = parser.parse_args()
 
@@ -202,6 +204,7 @@ def main():
         device_map="auto",
         cache_dir="./models",
         attn_implementation="eager").to("cuda")
+    num_layers = len(model.model.layers)
     print("\nLLM successfully initialized.\n")
 
     # Configure prompt templates for different datasets
@@ -244,12 +247,11 @@ def main():
         decoded = tokenizer.decode(generated.sequences[0, prompt["input_ids"].shape[-1]:],
                                     skip_special_tokens=True)
         return (
-            functions.plot_internal_state_2(generated)
-            + functions.plot_internal_state_2(generated, state="attention")
+            functions.plot_internal_state_2(generated, num_layers)
+            + functions.plot_internal_state_2(generated, num_layers, state="attention")
             + functions.probability_function(generated)
             + [decoded]
         )
-    
     if args.num_workers == 1:
         result = []
         for index, row in tqdm(enumerate(dataset), total=len(dataset), desc=f"Generating responses for {args.dataset_name} dataset ..."):
@@ -278,8 +280,8 @@ def main():
             decoded = tokenizer.decode(generated.sequences[0, prompt["input_ids"].shape[-1]:],
                                         skip_special_tokens=True)
             result.append(
-                functions.plot_internal_state_2(generated)
-                + functions.plot_internal_state_2(generated, state="attention")
+                functions.plot_internal_state_2(generated, num_layers)
+                + functions.plot_internal_state_2(generated, num_layers, state="attention")
                 + functions.probability_function(generated)
                 + [decoded]
             )
@@ -299,7 +301,7 @@ def main():
     print("Starting the BLEURT setup for evaluation...\n")
     # correct answers for questions 
     answer_mapping = {
-        'truthfulqa': ['best_answer','question'],
+        'truthfulqa': ['best_answer', 'correct_answers','question'],
         'triviaqa': ['answer','question'],
         'coqa': ['answer','question'],
         'tydiqa': ['answers','question'],
@@ -364,7 +366,7 @@ def main():
         'hallucination' : df_bleurt['hallucination']
     }).to_csv(f'./results/{args.dataset_name}_processed/hal_det_{args.model_name}_{args.dataset_name}_responses_with_bleurt.csv')
     
-    data = functions.data_preparation(df, df_bleurt)
+    data = functions.data_preparation(df, df_bleurt, num_layers)
     data.to_parquet(f'./results/{args.dataset_name}_processed/hal_det_{args.model_name}_{args.dataset_name}_dataset.pq')
     
     # Remove unnecessary files
@@ -381,9 +383,9 @@ def main():
     
     print("Starting classifier training with the processed dataset...\n")
     if args.dataset_name in ['truthfulqa', 'triviaqa', 'tydiqa', 'coqa']:
-        trained_model = classifier.train_combined_model(data, test_size=0.25)
+        trained_model = classifier.train_combined_model(data, num_layers, test_size=0.25)
     elif args.dataset_name in ['haluevaldia', 'haluevalqa', 'haluevalsum']:
-        trained_model = classifier.train_combined_model(data, test_size=0.9)
+        trained_model = classifier.train_combined_model(data, num_layers, test_size=0.9)
     torch.save(trained_model.state_dict(), f"./results/{args.dataset_name}_processed/hal_det_{args.model_name}_{args.dataset_name}_model.pth")
     
     print("\nHalluShift execution completed successfully.\n")
