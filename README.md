@@ -1,10 +1,28 @@
-# 🌟 HalluShift
+<div align="center">
 
-This repository contains the source code for the **IJCNN 2025** paper [***HalluShift: Measuring Distribution Shifts towards Hallucination Detection in LLMs***](https://ieeexplore.ieee.org/document/11228484) by Sharanya Dasgupta, Sujoy Nath, Arkaprabha Basu, Pourya Shamsolmoali, and Swagatam Das.
+# 🌟 HalluShift: Measuring Distribution Shifts towards Hallucination Detection in LLMs
 
-![](Hallushift_method_v2_page-0001.jpg)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Python 3.10.12](https://img.shields.io/badge/python-3.10.12-blue.svg)](https://www.python.org/downloads/release/python-31012/)
+[![Paper](https://img.shields.io/badge/Paper-IJCNN%202025-red)](https://ieeexplore.ieee.org/document/11228484)
 
----
+</div>
+
+This repository contains the source code for the **IJCNN 2025** paper [***HalluShift: Measuring Distribution Shifts towards Hallucination Detection in LLMs***](https://arxiv.org/pdf/2504.09482) by Sharanya Dasgupta, Sujoy Nath, Arkaprabha Basu, Pourya Shamsolmoali, and Swagatam Das.
+
+
+
+<div align="center">
+
+<a href="https://arxiv.org/pdf/2504.09482">
+  <img src="Hallushift_method.jpg" width="100%" alt="ARREST Method">
+</a>
+</div>
+
+
+## 📖 **Overview**
+
+**HalluShift** detects LLM hallucinations by measuring distribution shifts and cosine similarities across internal hidden states and attention layers, combined with token-level uncertainty metrics, to distinguish between truthful and fabricated responses.
 
 ## 🛠️ **Model Preparation**
 
@@ -80,3 +98,21 @@ This repository contains the source code for the **IJCNN 2025** paper [***HalluS
    python demo.py
    ```
    The pre-trained model and the processed dataset are provided in the `demo` folder for easy evaluation.
+
+
+## 📄 Citation
+
+If you find this code useful for your research, please cite our paper:
+
+```bibtex
+@INPROCEEDINGS{dasgupta2025hallushift,
+  author={Dasgupta, Sharanya and Nath, Sujoy and Basu, Arkaprabha and Shamsolmoali, Pourya and Das, Swagatam},
+  booktitle={2025 International Joint Conference on Neural Networks (IJCNN)}, 
+  title={HalluShift: Measuring Distribution Shifts towards Hallucination Detection in LLMs}, 
+  year={2025},
+  volume={},
+  number={},
+  pages={1-8},
+  keywords={Uncertainty;Accuracy;Large language models;Neural networks;Coherence;Benchmark testing;Cognition;Fake news;hallucination detection;distribution shift;large language models;token probability},
+  doi={10.1109/IJCNN64981.2025.11228484}}
+```
